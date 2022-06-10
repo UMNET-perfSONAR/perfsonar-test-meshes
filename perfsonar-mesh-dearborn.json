@@ -1,0 +1,78 @@
+{
+    "_meta": {
+	"display-name": "Dearborn"
+    },
+
+    "addresses": {
+         "bin-seb": {
+            "address": "perfsonar-bin-seb-10ge.umnet.umich.edu"
+        },
+        "dearborn": {
+            "address": "perfsonar-dc-dbn.umd.umich.edu"
+        },
+    },
+    "groups": {
+        "latency_group": {
+            "type": "mesh",
+            "addresses": [
+                 {"name": "dearborn"},
+                 {"name": "bin-seb"},
+             ]  
+        },
+        "throughput_group": {
+            "type": "mesh",
+            "addresses": [
+                 {"name": "dearborn"},
+                 {"name": "bin-seb"},
+             ]  
+        }
+    },
+    "tests": {
+        "latency_test": {
+            "type": "latencybg",
+            "spec": {
+                "source": "{% address[0] %}",
+                "dest": "{% address[1] %}",
+                "packet-interval": 0.1,
+                "packet-count": 600
+            }
+        },
+        "throughput_test": {
+            "type": "throughput",
+            "spec": {
+                "source": "{% address[0] %}",
+                "dest": "{% address[1] %}",
+                "duration": "PT30S"
+            }
+        }
+    },
+    "archives": { 
+       "esmond_archive": {
+            "archiver": "esmond",
+            "data": {
+                "url": "https://perfsonar-archive.miserver.it.umich.edu/esmond/perfsonar/archive",
+                "measurement-agent": "{% scheduled_by_address %}"
+            }
+        }
+    },
+    "schedules": { 
+       "every_12_hours": {
+            "repeat": "PT12H",
+            "slip": "PT4H",
+            "sliprand": true
+        }
+    },
+    "tasks": {
+        "Core Latency": {
+            "group": "latency_group",
+            "test": "latency_test",
+            "archives": ["esmond_archive"]
+        },
+        "Core Throughput": {
+            "group": "throughput_group",
+            "test": "throughput_test",
+            "archives": ["esmond_archive"],
+            "schedule": "every_12_hours"
+        }
+    }
+}
