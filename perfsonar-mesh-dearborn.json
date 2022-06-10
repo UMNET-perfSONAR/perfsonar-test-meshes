@@ -7,23 +7,43 @@
          "bin-seb": {
             "address": "perfsonar-bin-seb-10ge.umnet.umich.edu"
         },
+         "merit-aa": {
+            "address": "nmon-aa.mich.net"
+        },
+         "merit-wsu": {
+            "address": "nmon-wsu.mich.net"
+        },
         "dearborn": {
             "address": "perfsonar-dc-dbn.umd.umich.edu"
-        },
+        }
     },
     "groups": {
         "latency_group": {
             "type": "mesh",
             "addresses": [
                  {"name": "dearborn"},
-                 {"name": "bin-seb"},
+                 {"name": "bin-seb"}
              ]  
         },
         "throughput_group": {
             "type": "mesh",
             "addresses": [
                  {"name": "dearborn"},
-                 {"name": "bin-seb"},
+                 {"name": "bin-seb"}
+             ]  
+        },
+        "merit_latency_group": {
+            "type": "mesh",
+            "addresses": [
+                 {"name": "dearborn"},
+                 {"name": "merit-wsu"}
+             ]  
+        },
+        "merit_throughput_group": {
+            "type": "mesh",
+            "addresses": [
+                 {"name": "dearborn"},
+                 {"name": "merit-wsu"}
              ]  
         }
     },
@@ -70,6 +90,17 @@
         },
         "Core Throughput": {
             "group": "throughput_group",
+            "test": "throughput_test",
+            "archives": ["esmond_archive"],
+            "schedule": "every_12_hours"
+        },
+        "Merit Latency": {
+            "group": "merit_latency_group",
+            "test": "latency_test",
+            "archives": ["esmond_archive"]
+        },
+        "Merit Throughput": {
+            "group": "merit_throughput_group",
             "test": "throughput_test",
             "archives": ["esmond_archive"],
             "schedule": "every_12_hours"
